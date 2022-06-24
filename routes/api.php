@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\type_2\UserController as T2UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'type_2'], function(){
+    Route::post("user" , [T2UserController::class, 'store']);
+    Route::get('/user' , [T2UserController::class , 'index']);
+    Route::get('/user/{id}' , [T2UserController::class , 'show']);
 });

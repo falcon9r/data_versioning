@@ -14,17 +14,18 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string("id")->comment("чтобы построить связь между версиями");
-            $table->string("version")->comment("Почему версия – это время? Исторические срезы: можно посмотреть,
-            как выглядела БД в определенное время
-            - Устойчиво к конфликтам репликации");
+            $table->id();
+            $table->string("token")->comment("чтобы построить связь между версиями");
             $table->string('name');
             $table->string('surname');
             $table->integer("position_id");
             $table->integer('dept_id');
-            $table->dateTime('data_start');
+            $table->dateTime('date_start')->comment("Почему версия – это время? Исторические срезы: можно посмотреть,
+            как выглядела БД в определенное время
+            - Устойчиво к конфликтам репликации");
             $table->dateTime('date_end');
-            $table->boolean("current");
+            $table->integer("current");
+            $table->timestamps();
         });
     }
 
