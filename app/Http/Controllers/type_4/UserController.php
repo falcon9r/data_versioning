@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\type_2;
+namespace App\Http\Controllers\type_4;
 
 use Carbon\Carbon;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Models\User4;
+use App\Models\User4_history;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-   /**
+     /**
      * @OA\Post(
      *    summary="add tracking",
-     *     path="/api/type_2/user",
-     *     tags={"Type_2"},
+     *     path="/api/type_4/user",
+     *     tags={"Type_4"},
      * 
      *   @OA\Parameter(
      *     name="name",
@@ -63,37 +63,35 @@ class UserController extends Controller
         }
         $token = bin2hex(openssl_random_pseudo_bytes(8));
         $date_start = Carbon::now()->format('y:m:d h:i:s');
-        $user = User::create([
+        $user = User4::create([
             'token' => $token,
             'name' => $request->name,
             'surname' => $request->surname,
             'position_id' => $request->position_id,
             'dept_id' => $request->dept_id,
-            'date_start' => $date_start,
-            'current' => 1,
-            'date_end' => $date_start // date end when update
         ]);
         return response()->json(['user_id' => $user]);
     }
     /**
      * @OA\Get(
      *    summary="add tracking",
-     *     path="/api/type_2/user",
-     *     tags={"Type_2"},
+     *     path="/api/type_4/user",
+     *     tags={"Type_4"},
      *     @OA\Response(response="200", description="Display a listing of type-auto."),
      *     @OA\Response(response=401, description="Unauthorized"),
      *     @OA\Response(response=404, description="Not Found"),
      * )
      */
     public function index(){
-        $users  = User::where('current' , 1)->get();
+        $users  = User4::where('id' ,'>' ,0)->get();
         return $users;
     }
-    /**
+
+     /**
      * @OA\Patch(
      *    summary="adad tracking",
-     *     path="/api/type_2/user/{id}",
-     *     tags={"Type_2"},
+     *     path="/api/type_4/user/{id}",
+     *     tags={"Type_4"},
      * 
      *   @OA\Parameter(
      *     name="id",
@@ -137,32 +135,29 @@ class UserController extends Controller
      * )
      */
     public function update(Request $request , $id){
-        $user = User::find($id);
-        $token = $user->token;
-        $user->current = 0;
-        $date = Carbon::now()->format("y:m:d h:i");
-        $user->date_end = $date;
-        $user->save();
         
-        $user = User::create([
-            'token' => $token,
+        $user = User4::find($id);
+        $last_user = User4_history::create([
+            'token' => $user->token,
+            'name' =>$user->name,
+            "surname" => $user->surname,
+            "position_id" => $user->position_id,
+            "dept_id" => $user->dept_id,
+        ]);
+        $user->update([
             'name' => $request->name,
             'surname' => $request->surname,
             'position_id' => $request->position_id,
             'dept_id' => $request->dept_id,
-            'date_start' => $date,
-            'current' => 1,
-            'date_end' => $date // date end when update
         ]);
-
-        return $user;
+        return $last_user;
     }
-    /**
+      /**
      * @OA\Get(
      *    summary="add tracking",
-     *     path="/api/type_2/user/{id}",
-     *     tags={"Type_2"},
-     *     @OA\Parameter(
+     *     path="/api/type_4/user/{id}",
+     *     tags={"Type_4"},
+     *   @OA\Parameter(
      *     name="id",
      *     in="path",
      *     required=true,
@@ -175,15 +170,8 @@ class UserController extends Controller
      * )
      */
     public function show($id){
-        $validator = Validator::make(['id'=>$id],[
-            'id' => Rule::exists(User::class,'id'),
-        ]);
-        if($validator->fails())
-        {
-            return response()->json($validator->errors());
-        }
-        $users = User::where('token' , User::find($id)->token)->get();
+        $user  = User4::find($id);
+        $users = User4_history::where('token' , $user->token)->get();
         return $users;
     }
-
 }
