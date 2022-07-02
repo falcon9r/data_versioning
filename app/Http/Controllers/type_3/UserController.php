@@ -98,6 +98,11 @@ class UserController extends Controller
         $user = User3::find($id);
         $token = $user->token;
         $user->current = 0;
+        $users = User3::where('token' , $token)->get();
+        for ($i=0; $i < $users->count(); $i++) { 
+            $users[$i]->current = 0;
+            $users[$i]->save();
+        }
         $name = $user->name;
         $old_email = $user->email;
         $user->save();

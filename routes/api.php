@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\type_2\UserController as T2UserController;
 use App\Http\Controllers\type_3\UserController as T3UserController;
 use App\Http\Controllers\type_4\UserController as T4UserController;
+use App\Http\Controllers\type_6\UserController  as T6UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,10 @@ Route::group(['prefix' => 'type_4'], function(){
     Route::get('/user' , [T4UserController::class , 'index']);
     Route::get('/user/{id}' , [T4UserController::class , 'show']);
     Route::patch('/user/{id}', [T4UserController::class, 'update']);
+});
+Route::group(['prefix' => 'type_6'], function(){
+    Route::post("user" , [T6UserController::class, 'store']);
+    Route::get('/user' , [T6UserController::class , 'index']);
+    Route::get('/user/{id}' , [T6UserController::class , 'show']);
+    Route::patch('/user/{id}', [T6UserController::class, 'update']);
 });

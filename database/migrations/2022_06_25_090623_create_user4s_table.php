@@ -13,6 +13,10 @@ class CreateUser4sTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('user4s');
+        Schema::dropIfExists('user4s_history');
+
+        
         Schema::create('user4s', function (Blueprint $table) {
             $table->id();
             $table->string("token")->comment("чтобы построить связь между версиями");
@@ -45,5 +49,6 @@ class CreateUser4sTable extends Migration
     public function down()
     {
         Schema::dropIfExists('user4s');
+        Schema::dropIfExists('user4s_history');
     }
 }

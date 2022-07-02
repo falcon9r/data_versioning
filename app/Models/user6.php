@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User4 extends Model
+class user6 extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -14,7 +14,8 @@ class User4 extends Model
         'token',
         'dept_id',
         'position_id',
+        'date_start',
         'date_end',
-        'date_start'
+        'current'
     ];
 }
